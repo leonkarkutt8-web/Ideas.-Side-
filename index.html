@@ -532,6 +532,149 @@
   .unsave-btn:hover { color: var(--text2); background: var(--bg4); }
   .unsave-btn svg { width: 14px; height: 14px; }
 
+  /* Login overlay */
+  .login-overlay {
+    position: fixed;
+    inset: 0;
+    background: var(--bg);
+    z-index: 100;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .login-box {
+    background: var(--bg2);
+    border: 1px solid var(--border2);
+    border-radius: 20px;
+    padding: 40px 36px;
+    width: 100%;
+    max-width: 420px;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .login-box::before {
+    content: '';
+    position: absolute;
+    top: 0; left: 0; right: 0;
+    height: 1px;
+    background: linear-gradient(90deg, transparent, var(--accent), transparent);
+    opacity: 0.6;
+  }
+
+  .login-logo {
+    font-family: 'Syne', sans-serif;
+    font-weight: 800;
+    font-size: 32px;
+    letter-spacing: -1px;
+    color: var(--text);
+    display: flex;
+    align-items: center;
+    gap: 10px;
+    margin-bottom: 6px;
+  }
+
+  .login-sub {
+    font-size: 13px;
+    color: var(--text3);
+    margin-bottom: 32px;
+  }
+
+  .login-label {
+    font-size: 12px;
+    font-weight: 600;
+    letter-spacing: 0.06em;
+    color: var(--text2);
+    margin-bottom: 8px;
+    display: block;
+  }
+
+  .login-input {
+    width: 100%;
+    padding: 12px 16px;
+    background: var(--bg3);
+    border: 1px solid var(--border2);
+    border-radius: var(--radius-sm);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    font-size: 13px;
+    outline: none;
+    margin-bottom: 10px;
+    transition: border-color 0.2s;
+    font-family: monospace;
+    letter-spacing: 0.05em;
+  }
+
+  .login-input:focus { border-color: rgba(200,240,96,0.5); }
+  .login-input::placeholder { color: var(--text3); font-family: 'DM Sans', sans-serif; letter-spacing: 0; }
+
+  .login-hint {
+    font-size: 11px;
+    color: var(--text3);
+    margin-bottom: 24px;
+    line-height: 1.5;
+  }
+
+  .login-hint a { color: var(--text2); }
+
+  .login-btn {
+    width: 100%;
+    padding: 12px;
+    background: var(--accent);
+    color: #0d0d0f;
+    border: none;
+    border-radius: var(--radius-sm);
+    font-family: 'Syne', sans-serif;
+    font-size: 14px;
+    font-weight: 700;
+    cursor: pointer;
+    transition: all 0.2s;
+    letter-spacing: 0.02em;
+  }
+
+  .login-btn:hover { background: var(--accent2); }
+  .login-btn:active { transform: scale(0.99); }
+
+  .login-error {
+    font-size: 12px;
+    color: #fdba74;
+    margin-top: 10px;
+    display: none;
+  }
+
+  .login-secure {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    margin-top: 20px;
+    font-size: 11px;
+    color: var(--text3);
+    justify-content: center;
+  }
+
+  .login-secure svg { width: 12px; height: 12px; }
+
+  /* Key indicator in header */
+  .key-indicator {
+    display: flex;
+    align-items: center;
+    gap: 6px;
+    font-size: 11px;
+    color: var(--text3);
+    cursor: pointer;
+    padding: 5px 10px;
+    border-radius: var(--radius-pill);
+    border: 1px solid var(--border);
+    transition: all 0.2s;
+    background: transparent;
+    font-family: 'DM Sans', sans-serif;
+  }
+
+  .key-indicator:hover { border-color: var(--border2); color: var(--text2); }
+  .key-indicator svg { width: 12px; height: 12px; }
+
   /* Footer */
   footer {
     margin-top: 60px;
@@ -567,6 +710,26 @@
 <body>
 <div class="page">
 
+  <!-- Login Overlay -->
+  <div class="login-overlay" id="login-overlay">
+    <div class="login-box">
+      <div class="login-logo"><span class="logo-dot"></span> Liro Ideas</div>
+      <div class="login-sub">Content Generator · VRChat &amp; Furry</div>
+      <label class="login-label">ANTHROPIC API KEY</label>
+      <input class="login-input" id="login-key-input" type="password" placeholder="sk-ant-..." />
+      <div class="login-hint">
+        Deinen Key bekommst du kostenlos auf <a href="https://console.anthropic.com" target="_blank">console.anthropic.com</a> → API Keys → Create Key.<br>
+        Der Key wird nur in deinem Browser gespeichert — niemand sonst sieht ihn.
+      </div>
+      <button class="login-btn" onclick="submitKey()">Einloggen &amp; loslegen</button>
+      <div class="login-error" id="login-error">Key ungültig — fängt mit "sk-ant-" an?</div>
+      <div class="login-secure">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
+        Wird nur lokal in deinem Browser gespeichert
+      </div>
+    </div>
+  </div>
+
   <header>
     <div class="logo-group">
       <div class="logo">
@@ -588,6 +751,10 @@
         <svg viewBox="0 0 24 24"><path d="M12 2.2c3.2 0 3.6 0 4.9.1 3.3.2 4.8 1.7 5 5 .1 1.3.1 1.6.1 4.8 0 3.2 0 3.6-.1 4.8-.2 3.3-1.7 4.9-5 5-1.3.1-1.6.1-4.9.1-3.2 0-3.6 0-4.8-.1-3.3-.2-4.8-1.7-5-5C2 16.6 2 16.3 2 12c0-3.2 0-3.6.1-4.8.2-3.3 1.7-4.8 5-5C8.4 2.2 8.8 2.2 12 2.2zM12 0C8.7 0 8.3 0 7.1.1 2.7.3.3 2.7.1 7.1 0 8.3 0 8.7 0 12c0 3.3 0 3.7.1 4.9.2 4.4 2.6 6.8 7 7C8.3 24 8.7 24 12 24c3.3 0 3.7 0 4.9-.1 4.4-.2 6.8-2.6 7-7 .1-1.2.1-1.6.1-4.9 0-3.3 0-3.7-.1-4.9C23.7 2.7 21.3.3 16.9.1 15.7 0 15.3 0 12 0zm0 5.8a6.2 6.2 0 1 0 0 12.4A6.2 6.2 0 0 0 12 5.8zm0 10.2a4 4 0 1 1 0-8 4 4 0 0 1 0 8zm6.4-11.8a1.4 1.4 0 1 0 0 2.9 1.4 1.4 0 0 0 0-2.9z"/></svg>
         Instagram
       </a>
+      <button class="key-indicator" onclick="resetKey()">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 2l-2 2m-7.61 7.61a5.5 5.5 0 1 1-7.778 7.778 5.5 5.5 0 0 1 7.777-7.777zm0 0L15.5 7.5m0 0l3 3L22 7l-3-3m-3.5 3.5L19 4"/></svg>
+        API Key ändern
+      </button>
     </div>
   </header>
 
@@ -875,11 +1042,12 @@ ${userPrompt ? `Stichwort/Thema: "${userPrompt}"` : 'Kein Thema – generiere ab
   try {
     const res = await fetch('https://api.anthropic.com/v1/messages', {
       method: 'POST',
-     headers: { 
-  'Content-Type': 'application/json',
-  'x-api-key': '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',
-  'anthropic-version': '2023-06-01',
-  'anthropic-dangerous-direct-browser-access': 'true'
+      headers: { 
+        'Content-Type': 'application/json',
+        'x-api-key': apiKey,
+        'anthropic-version': '2023-06-01',
+        'anthropic-dangerous-direct-browser-access': 'true'
+      },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
         max_tokens: 1000,
@@ -901,7 +1069,44 @@ ${userPrompt ? `Stichwort/Thema: "${userPrompt}"` : 'Kein Thema – generiere ab
   btn.disabled = false;
 }
 
-// Init
+// API Key management
+let apiKey = localStorage.getItem('liro_api_key') || '';
+
+function checkLogin() {
+  const overlay = document.getElementById('login-overlay');
+  if (apiKey && apiKey.startsWith('sk-ant-')) {
+    overlay.style.display = 'none';
+  } else {
+    overlay.style.display = 'flex';
+  }
+}
+
+function submitKey() {
+  const input = document.getElementById('login-key-input').value.trim();
+  const error = document.getElementById('login-error');
+  if (!input.startsWith('sk-ant-')) {
+    error.style.display = 'block';
+    return;
+  }
+  error.style.display = 'none';
+  apiKey = input;
+  localStorage.setItem('liro_api_key', apiKey);
+  document.getElementById('login-overlay').style.display = 'none';
+}
+
+function resetKey() {
+  localStorage.removeItem('liro_api_key');
+  apiKey = '';
+  document.getElementById('login-key-input').value = '';
+  document.getElementById('login-overlay').style.display = 'flex';
+}
+
+// Allow Enter key in input
+document.getElementById('login-key-input').addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitKey();
+});
+
+checkLogin();
 displayed = shuffle(getPool());
 renderStatic();
 renderSaved();
