@@ -1046,7 +1046,8 @@ ${userPrompt ? `Stichwort/Thema: "${userPrompt}"` : 'Kein Thema – generiere ab
         'Content-Type': 'application/json',
         'x-api-key': apiKey,
         'anthropic-version': '2023-06-01',
-        'anthropic-dangerous-direct-browser-access': 'true'
+        'anthropic-dangerous-direct-browser-access': 'true',
+        'anthropic-beta': 'direct-browser-access-2025-02-06'
       },
       body: JSON.stringify({
         model: 'claude-sonnet-4-20250514',
